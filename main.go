@@ -9,8 +9,8 @@ import (
 
 func main() {
 	args := os.Args[1:]
-	var calFlag = flag.Bool("cal", false, "Use -cal or --cal to invoke a calendar.")
-	var dateFlag = flag.Bool("date", false, "Use no arguments or -date for today's date.")
+	var calFlag = flag.Bool("cal", false, "Use -cal to invoke a calendar.")
+	var dateFlag = flag.Bool("date", false, "Use -date or no arguments for today's date.")
 	flag.Parse()
 
 	if len(args) == 0 {

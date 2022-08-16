@@ -3,14 +3,18 @@ package calendar
 import (
 	"fmt"
 	"nepdate/utils"
+
+	// "nepdate/utils"
 	"os"
+	"strings"
 
 	"github.com/gocolly/colly"
 )
 
 const URL = "https://nepalicalendar.rat32.com"
-const MONTH_SELECTOR = "html>body>div#page>div#content>div#leftMiddle>div#father>div#cover>div#monthtitle>h1#yren"
-const DATE_SELECTOR = "html>body>div#page>div#content>div#leftMiddle>div#father>div#cover>div#main>div#Cells1.cells"
+const COMMON_SELECTOR = "html>body>div#page>div#content>div#leftMiddle>div#father>div#cover"
+const MONTH_SELECTOR = "div#monthtitle>h1#yren"
+const DATE_SELECTOR = "div#main"
 
 // To store holiday information
 type holiday struct {
@@ -20,41 +24,57 @@ type holiday struct {
 
 func Calendar() {
 	c := colly.NewCollector()
+	var monthTitle string
+	var gaps int8
+	var dontSkipgaps bool
+	var endDate int8
+	var currentDate int8
 
 	// On Error
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Could not connect to the network")
 		os.Exit(1)
 	})
+
 	// On HTML Response
-	c.OnHTML(MONTH_SELECTOR, func(h *colly.HTMLElement) {
-		// title := strings.TrimSpace(h.Text)
-		// Parse gaps, parse end date, parse today, parse holidays
-		// PrintCalendar(title, 3, 31, 22)
+	c.OnHTML(COMMON_SELECTOR, func(h *colly.HTMLElement) {
+		h.ForEach(MONTH_SELECTOR, func(i int, monthElement *colly.HTMLElement) {
+			monthTitle = strings.TrimSpace(monthElement.Text)
+		})
+		h.ForEach(DATE_SELECTOR, func(i int, dateElement *colly.HTMLElement) {
+			// Go through every cell
+			h.ForEach("div#Cell1.cells", func(i int, date *colly.HTMLElement) {
+				// count the number of gaps
+				if len(date.Attr("style")) > 0 {
+					currentDate = endDate + 1
+				}
+				date.ForEach("div#dashi", func(i int, dashi *colly.HTMLElement) {
+					// Only count the gaps in front
+					if len(strings.TrimSpace(dashi.Text)) > 0 {
+						endDate++
+						dontSkipgaps = true
+					} else {
+						if !dontSkipgaps {
+							gaps++
+						}
+					}
+				})
+			})
+		})
+		PrintCalendar(monthTitle, gaps, endDate, currentDate)
 	})
-	// c.Visit(URL)
-	var dummyHolidays = []holiday{
-		{
-			name: "Gaijatra",
-			date: 14,
-		},
-		{
-			name: "Dummy Holiday 2",
-			date: 30,
-		},
-	}
-	PrintCalendar("Shrawan 2079", 3, 31, 22, dummyHolidays)
+	c.Visit(URL)
 }
 
-func PrintCalendar(title string, spaces, end, today int8, holidays []holiday) {
-	// Holidays in dates
-	var holidayDates []int8
-
-	for _, hDay := range holidays {
-		holidayDates = append(holidayDates, hDay.date)
-	}
-
+func PrintCalendar(title string, spaces, end, today int8) {
+	// Print the title
 	fmt.Println(title)
+	// Print separator
+	for s := 0; s < 20; s++ {
+		fmt.Print("-")
+	}
+	fmt.Println()
+	// Print the name of days, eg sun mon etc
 	for _, dayName := range utils.GetDays() {
 		fmt.Print(dayName, " ")
 	}
@@ -65,8 +85,8 @@ func PrintCalendar(title string, spaces, end, today int8, holidays []holiday) {
 
 	// Format milayera print gar
 	for j := int8(1); j <= end; j++ {
-		if utils.IsNumberInArray(j, holidayDates) || ((spaces+j)%7 == 0) {
-			// Print holiday in red color
+		if (spaces+j)%7 == 0 {
+			// Print saturday in red color
 			fmt.Printf("\033[1;31m%2d\033[0m", j)
 		} else if j == today {
 			// Print in blue color
