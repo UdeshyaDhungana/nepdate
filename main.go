@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"nepdate/calendar"
+	"nepdate/date"
 	"os"
 )
 
@@ -14,15 +14,15 @@ func main() {
 	flag.Parse()
 
 	if len(args) == 0 {
-		// date.Date()
-		fmt.Println("Executing date...")
+		date.Date()
+		// fmt.Println("Executing date...")
 	} else {
 		if *calFlag {
 			// call calendar command
 			calendar.Calendar()
 		} else if *dateFlag {
-			// date.Date()
-			fmt.Println("Executing date...")
+			date.Date()
+			// fmt.Println("Executing date...")
 		}
 	}
 }

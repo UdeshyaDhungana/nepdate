@@ -3,6 +3,8 @@ package calendar
 import (
 	"fmt"
 	"nepdate/utils"
+	"path/filepath"
+	"time"
 
 	// "nepdate/utils"
 	"os"
@@ -16,13 +18,7 @@ const COMMON_SELECTOR = "html>body>div#page>div#content>div#leftMiddle>div#fathe
 const MONTH_SELECTOR = "div#monthtitle>h1#yren"
 const DATE_SELECTOR = "div#main"
 
-// To store holiday information
-type holiday struct {
-	name string
-	date int8
-}
-
-func Calendar() {
+func UpdateCache(lastCallPath, calCachePath string) {
 	c := colly.NewCollector()
 	var monthTitle string
 	var gaps int8
@@ -61,43 +57,87 @@ func Calendar() {
 				})
 			})
 		})
-		PrintCalendar(monthTitle, gaps, endDate, currentDate)
+		// save the cache
+		lastCallFile, lcFileError := os.Create(lastCallPath)
+		if lcFileError != nil {
+			panic("Operation aborted. Please check file permissions")
+		}
+		fmt.Fprint(lastCallFile, time.Now().Format("2006.01"))
+
+		// write calendar output in
+		SaveCache(monthTitle, gaps, endDate, currentDate, calCachePath)
 	})
 	c.Visit(URL)
+
 }
 
-func PrintCalendar(title string, spaces, end, today int8) {
+func Calendar() {
+	homeDir := utils.GetHomeDir()
+	lastCallPath := filepath.Join(homeDir, ".nepdate", "lastcall_cal")
+	calCachePath := filepath.Join(homeDir, ".nepdate", "cal")
+
+	// Read when last called
+	lastCalled, err := os.ReadFile(lastCallPath)
+	if err != nil {
+		UpdateCache(lastCallPath, calCachePath)
+	} else {
+		// if today's year and month matches
+		lc := string(lastCalled)
+		tn := time.Now().Format("2006.01")
+		if lc != tn {
+			// open the file
+			UpdateCache(lastCallPath, calCachePath)
+		}
+	}
+	PrintCalendar(lastCallPath, calCachePath)
+}
+
+func PrintCalendar(lastCallPath, calCachePath string) {
+	cachedDate, err := os.ReadFile(calCachePath)
+	if err != nil {
+		UpdateCache(lastCallPath, calCachePath)
+		PrintCalendar(lastCallPath, calCachePath)
+	}
+	// Print cache
+	fmt.Print(string(cachedDate))
+}
+
+func SaveCache(title string, spaces, end, today int8, calCachePath string) {
+	calCache, calCacheError := os.Create(calCachePath)
+	if calCacheError != nil {
+		panic("Operation aborted. Please check file permissions.")
+	}
 	// Print the title
-	fmt.Println(title)
+	fmt.Fprintln(calCache, title)
 	// Print separator
 	for s := 0; s < 20; s++ {
-		fmt.Print("-")
+		fmt.Fprint(calCache, "-")
 	}
-	fmt.Println()
+	fmt.Fprintln(calCache)
 	// Print the name of days, eg sun mon etc
 	for _, dayName := range utils.GetDays() {
-		fmt.Print(dayName, " ")
+		fmt.Fprint(calCache, dayName, " ")
 	}
-	fmt.Print("\b\n")
+	fmt.Fprint(calCache, "\b\n")
 	for i := int8(0); i < spaces; i++ {
-		fmt.Print("   ")
+		fmt.Fprint(calCache, "   ")
 	}
 
 	// Format milayera print gar
 	for j := int8(1); j <= end; j++ {
 		if (spaces+j)%7 == 0 {
 			// Print saturday in red color
-			fmt.Printf("\033[1;31m%2d\033[0m", j)
+			fmt.Fprintf(calCache, "\033[1;31m%2d\033[0m", j)
 		} else if j == today {
 			// Print in blue color
-			fmt.Printf("\033[1;34m%2d\033[0m", j)
+			fmt.Fprintf(calCache, "\033[1;34m%2d\033[0m", j)
 		} else {
-			fmt.Printf("%2d", j)
+			fmt.Fprintf(calCache, "%2d", j)
 		}
-		fmt.Print(" ")
+		fmt.Fprint(calCache, " ")
 		if (spaces+j)%7 == 0 {
-			fmt.Printf("\b\n")
+			fmt.Fprintf(calCache, "\b\n")
 		}
 	}
-	fmt.Printf("\n\n")
+	fmt.Fprintf(calCache, "\n\n")
 }

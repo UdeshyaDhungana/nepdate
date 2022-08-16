@@ -80,6 +80,5 @@ func Date() {
 			UpdateCache(lastCallPath, dateCachePath)
 		}
 	}
-
 	PrintDate(lastCallPath, dateCachePath)
 }
