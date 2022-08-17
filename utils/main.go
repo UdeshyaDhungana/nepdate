@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+// Struct for working with helpMessage
+type helpMessage struct {
+	Option   string
+	HelpText string
+}
+
 func GetDays() []string {
 	return []string{"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"}
 }
@@ -48,4 +54,31 @@ func GetDMYFromDate(date string) []int {
 		month,
 		day,
 	}
+}
+
+// get help options
+func GetHelp() []helpMessage {
+	helpMessages := []helpMessage{
+		{
+			Option:   "-date",
+			HelpText: "Displays today's Nepalese date",
+		},
+		{
+			Option:   "-cal",
+			HelpText: "Display this month's Nepalese calendar",
+		},
+		{
+			Option:   "-conv=YYYY.MM.DD",
+			HelpText: "Convert and display the specified Nepalese date to English",
+		},
+		{
+			Option:   "-rconv=YYYY.MM.DD",
+			HelpText: "Convert and display the specified English date to Nepalese",
+		},
+		{
+			Option:   "-help",
+			HelpText: "Display this help meessage",
+		},
+	}
+	return helpMessages
 }
