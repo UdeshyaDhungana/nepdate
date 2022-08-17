@@ -38,7 +38,7 @@ func UpdateCache(lastCallPath, dateCachePath string) {
 			// write today's nepali date in ~/.nepdate/date
 			dateCache, dateCacheError := os.Create(dateCachePath)
 			if dateCacheError != nil {
-				panic("Operation aborted. Please check file permissions.")
+				panic("OOOOperation aborted. Please check file permissions.")
 			}
 			fmt.Fprint(dateCache, output)
 		}
