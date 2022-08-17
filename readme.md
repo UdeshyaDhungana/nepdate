@@ -6,10 +6,10 @@
 - `./nepdate [options]` for usage 
 
 
-# Instructions for Installing
+# Instructions for Installing and Using
 
 - Download the zip file from the release section.
 - Unzip
 - Make sure `install.sh` has executable permissions (`chmod +x install.sh`)
 - Run `install.sh`
-- Put `.nepdate/bin` in your path variable: `export PATH="/Users/udeshya/.nepdate/bin:$PATH"`
+- Put `.nepdate/bin` in your path variable: `export PATH="$HOME/.nepdate/bin:$PATH"` to `.zshrc` or `.bashrc` depending upon your shell.
