@@ -10,7 +10,7 @@
     "request": "launch",
     "mode": "debug",
     "program": "main.go",
-    "args": ["-cal"],
+    "args": ["-conv=2079.05.01"],
   }
   ]
 }

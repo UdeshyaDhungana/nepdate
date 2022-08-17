@@ -2,6 +2,8 @@ package utils
 
 import (
 	"os"
+	"strconv"
+	"time"
 )
 
 func GetDays() []string {
@@ -23,4 +25,27 @@ func IsNumberInArray(a int8, list []int8) bool {
 		}
 	}
 	return false
+}
+
+func IsValidDate(date string) bool {
+	_, err := time.Parse("2006.01.02", date)
+	if err != nil {
+		panic("Aborted: Date is invalid.")
+	}
+	return (err == nil)
+}
+
+// extract [YYY, MM, DD] from YYYY.MM.DD
+func GetDMYFromDate(date string) []int {
+	year, yerr := strconv.Atoi(date[0:4])
+	month, merr := strconv.Atoi(date[5:7])
+	day, derr := strconv.Atoi(date[8:10])
+	if yerr != nil || merr != nil || derr != nil {
+		panic("Aborted: Error while parsing date.")
+	}
+	return []int{
+		year,
+		month,
+		day,
+	}
 }

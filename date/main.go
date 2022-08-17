@@ -19,8 +19,7 @@ func UpdateCache(lastCallPath, dateCachePath string) {
 	// fetch date and return the date
 	c := colly.NewCollector()
 	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("Could not connect to the network")
-		os.Exit(1)
+		panic("Network connection error.")
 	})
 	c.OnHTML(SELECTOR, func(h *colly.HTMLElement) {
 		allText := h.Text

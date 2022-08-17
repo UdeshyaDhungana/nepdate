@@ -28,8 +28,7 @@ func UpdateCache(lastCallPath, calCachePath string) {
 
 	// On Error
 	c.OnError(func(r *colly.Response, err error) {
-		fmt.Println("Could not connect to the network")
-		os.Exit(1)
+		panic("Network connection error.")
 	})
 
 	// On HTML Response
@@ -61,6 +60,7 @@ func UpdateCache(lastCallPath, calCachePath string) {
 		lastCallFile, lcFileError := os.Create(lastCallPath)
 		if lcFileError != nil {
 			panic("Operation aborted. Please check file permissions")
+
 		}
 		fmt.Fprint(lastCallFile, time.Now().Format("2006.01"))
 
