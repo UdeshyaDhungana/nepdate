@@ -1,3 +1,8 @@
+# Features
+- Dispay today's Nepali date
+- Display this month's calendar
+- Convert date between B.S. and A.D.
+
 # Instructions for Building
 
 - Make sure the program has permission to read and write on user home directory
