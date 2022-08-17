@@ -25,7 +25,7 @@ func GetResults(date string, reverse bool) {
 		if reverse {
 			req = fmt.Sprintf("date=%d&month=%d&year=%d", ymd[2], ymd[1], ymd[0])
 		} else {
-			req = fmt.Sprintf("nepYear=%d&nepMonth=%d&nepDate:%d", ymd[0], ymd[1], ymd[2])
+			req = fmt.Sprintf("nepYear=%d&nepMonth=%d&nepDate=%d", ymd[0], ymd[1], ymd[2])
 		}
 
 		payload := []byte(req)
