@@ -62,7 +62,11 @@ func PrintMonthsCalendar(year int, months []int, currentDate internal.NepaliDate
 		}
 		// Print months
 		for i := 0; i < daysInMonth[m]; i++ {
-			fmt.Printf("%2d ", i+1)
+			if i+1 == currentDate.Date && m == currentDate.Month && currentDate.Year == year {
+				fmt.Printf("\x1b[30;47m%2d\x1b[0m ", i+1)
+			} else {
+				fmt.Printf("%2d ", i+1)
+			}
 			startWeekDay += 1
 			if startWeekDay == 7 {
 				fmt.Printf("\n")
