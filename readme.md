@@ -18,12 +18,6 @@ cd nepdate
 go build -o nepdate .
 ```
 
-Or install directly with Go:
-
-```
-go install <module-path>@latest
-```
-
 ## Usage
 
 ```
@@ -37,12 +31,9 @@ Subcommands:
 
 Flags:
 
-cal
-  -y            Print the whole year's calendar
-
 conv
-  -ad yyyy-mm-dd    Convert to A.D.
-  -bs yyyy-mm-dd    Convert to B.S.
+  --ad yyyy/mm/dd    Convert to A.D.
+  --bs yyyy/mm/dd    Convert to B.S.
 ```
 
 ## Examples
@@ -59,20 +50,14 @@ Show this month's calendar:
 nepdate cal
 ```
 
-Show the whole year's calendar:
-
-```
-nepdate cal -y
-```
-
 Convert a B.S. date to A.D.:
 
 ```
-nepdate conv -bs 2079-01-01
+nepdate conv --bs 2083/04/05
 ```
 
 Convert an A.D. date to B.S.:
 
 ```
-nepdate conv -ad 2022-04-14
+nepdate conv --ad 2026/07/21
 ```
