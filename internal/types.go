@@ -105,10 +105,11 @@ func MustConvertAdTimeToBsDate(time time.Time) BSDate {
 
 	daysSinceSakrati := daysSinceNayaBarsa
 	for _, daysInMonth := range bsYearConfig.DaysInMonths {
-		if daysSinceSakrati-int64(daysInMonth) >= 0 {
-			daysSinceSakrati -= int64(daysInMonth)
-			monthsSinceBSNewYear += 1
+		if daysSinceSakrati-int64(daysInMonth) <= 0 {
+			break
 		}
+		daysSinceSakrati -= int64(daysInMonth)
+		monthsSinceBSNewYear += 1
 	}
 
 	return BSDate{
