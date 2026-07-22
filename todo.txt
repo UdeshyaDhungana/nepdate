@@ -1,0 +1,4 @@
+- [X] Ship
+- [X] Backfill old years using AI
+- [ ] Highlight current date in calendar
+- [ ] Better error handling in case of invalid dates
