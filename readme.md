@@ -2,6 +2,12 @@
 
 A command-line tool for working with the Nepali (Bikram Sambat) calendar. Built with [Cobra](https://github.com/spf13/cobra).
 
+## Quick Install
+
+```bash
+curl -sSL https://raw.githubusercontent.com/UdeshyaDhungana/nepdate/main/install.sh | bash
+```
+
 ## Features
 
 - Display today's Nepali date
