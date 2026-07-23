@@ -81,11 +81,6 @@ func (d BSDate) String() string {
 func MustConvertAdTimeToBsDate(time time.Time) BSDate {
 	timeUnixTs := time.Unix()
 	bsConfig := GetConfig()
-
-	// This algorithm suffers from one important edge case
-	// If the config isn't updated in the future
-	// current year will be set to the max possible year whose config is set
-	// If you come across such a mistake, raise a PR adding the config
 	minPositiveDiffBetweenNowAndNewYear := int64(math.MaxInt64)
 	var bsYearConfig BSYearConfig
 	var bsYear int
@@ -93,6 +88,7 @@ func MustConvertAdTimeToBsDate(time time.Time) BSDate {
 	for year, yearConfig := range bsConfig.Years {
 		yearStartTs := yearConfig.StartDateUnixTs
 		difference := timeUnixTs - yearStartTs
+
 		if difference >= 0 && difference < minPositiveDiffBetweenNowAndNewYear {
 			minPositiveDiffBetweenNowAndNewYear = difference
 			bsYearConfig = yearConfig
@@ -101,9 +97,19 @@ func MustConvertAdTimeToBsDate(time time.Time) BSDate {
 	}
 
 	daysSinceNayaBarsa := 1 + (timeUnixTs-bsYearConfig.StartDateUnixTs)/86400
-	monthsSinceBSNewYear := 0
+	totalDaysInYear := 0
 
+	for _, daysInMonth := range bsYearConfig.DaysInMonths {
+		totalDaysInYear += daysInMonth
+	}
+
+	if daysSinceNayaBarsa > int64(totalDaysInYear) {
+		panic("Date falls outside of configured bounds.\nRaise a PR here: https://github.com/UdeshyaDhungana/nepdate/blob/main/internal/years.json")
+	}
+
+	monthsSinceBSNewYear := 0
 	daysSinceSakrati := daysSinceNayaBarsa
+
 	for _, daysInMonth := range bsYearConfig.DaysInMonths {
 		if daysSinceSakrati-int64(daysInMonth) <= 0 {
 			break
@@ -121,7 +127,12 @@ func MustConvertAdTimeToBsDate(time time.Time) BSDate {
 
 func MustConvertBsDateToAdTime(bsDate BSDate) time.Time {
 	config := GetConfig()
-	bsYearConfig := config.Years[bsDate.Year]
+
+	bsYearConfig, ok := config.Years[bsDate.Year]
+	if !ok {
+		panic("Date falls outside of configured bounds.\nRaise a PR here: https://github.com/UdeshyaDhungana/nepdate/blob/main/internal/years.json")
+	}
+
 	daysSinceNayaBarsa := 0
 
 	for _, daysInMonth := range bsYearConfig.DaysInMonths[:bsDate.Month] {

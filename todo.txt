@@ -1,5 +1,5 @@
 - [X] Ship
 - [X] Backfill old years using AI
 - [X] Fix bugs in AD -> BS conversion for month end dates
-- [ ] Highlight current date in calendar
-- [ ] Better error handling in case of uncovered ranges
+- [X] Highlight current date in calendar
+- [X] Better error handling in case of uncovered ranges

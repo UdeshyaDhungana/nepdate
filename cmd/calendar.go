@@ -45,11 +45,17 @@ var calCmd = &cobra.Command{
 
 			var thisWeekDays []string
 			for miti := sundayMiti; miti <= saturdayMiti; miti++ {
-				if miti > 0 && miti <= daysCountInThisMonth {
-					thisWeekDays = append(thisWeekDays, fmt.Sprintf("%02d", miti))
-				} else {
+				if miti <= 0 || miti > daysCountInThisMonth {
 					thisWeekDays = append(thisWeekDays, "  ")
+					continue
 				}
+
+				if miti == today.Day {
+					thisWeekDays = append(thisWeekDays, fmt.Sprintf("\x1b[30;47m%02d\x1b[0m", miti))
+					continue
+				}
+
+				thisWeekDays = append(thisWeekDays, fmt.Sprintf("%02d", miti))
 			}
 
 			fmt.Printf("%s\n", strings.Join(thisWeekDays, " "))

@@ -65,7 +65,6 @@ var convCmd = &cobra.Command{
 			}
 
 			separator := fmt.Sprintf("%c", bsDateString[4])
-
 			adTime := internal.MustConvertBsDateToAdTime(internal.BSDate{
 				Year:  year,
 				Month: internal.BSMonth(month - 1),
