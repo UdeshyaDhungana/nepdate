@@ -6,6 +6,15 @@ import (
 	"time"
 )
 
+type BSYearConfig struct {
+	DaysInMonths    [12]int `json:"days_in_months"`
+	StartDateUnixTs int64   `json:"start_date"`
+}
+
+type BSConfig struct {
+	Years map[int]BSYearConfig
+}
+
 type BSMonth int
 
 const (

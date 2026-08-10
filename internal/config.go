@@ -9,15 +9,6 @@ import (
 	"sync"
 )
 
-type BSYearConfig struct {
-	DaysInMonths    [12]int `json:"days_in_months"`
-	StartDateUnixTs int64   `json:"start_date"`
-}
-
-type BSConfig struct {
-	Years map[int]BSYearConfig
-}
-
 //go:embed years.json
 var yearsJSON []byte
 
@@ -27,7 +18,6 @@ var (
 )
 
 func GetConfig() BSConfig {
-	// Load once
 	once.Do(func() {
 		var raw map[string]BSYearConfig
 		if err := json.Unmarshal(yearsJSON, &raw); err != nil {

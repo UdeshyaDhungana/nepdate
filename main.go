@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/UdeshyaDhungana/nepdate/cmd"
-	"github.com/UdeshyaDhungana/nepdate/internal"
 )
 
 func main() {
@@ -13,6 +12,5 @@ func main() {
 			fmt.Printf("%v\n", r)
 		}
 	}()
-	internal.GetConfig()
 	cmd.Execute()
 }
