@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var calYear bool
+var calYear, calExtended bool
 
 const calendarWidth = 20 // 7 days × 2 chars + 6 gaps
 
@@ -129,6 +129,8 @@ var calCmd = &cobra.Command{
 		today := internal.MustConvertAdTimeToBsDate(time.Now())
 		if calYear {
 			printYearCalendar(today)
+		} else if calExtended {
+			printExtendedMonth(today.Year, today.Month, &today)
 		} else {
 			for _, line := range renderMonth(today.Year, today.Month, &today, true) {
 				fmt.Println(line)
@@ -139,5 +141,7 @@ var calCmd = &cobra.Command{
 
 func init() {
 	calCmd.Flags().BoolVarP(&calYear, "year", "y", false, "show the whole year's calendar")
+	calCmd.Flags().BoolVarP(&calExtended, "extended", "e", false, "show a large grid calendar for the month, with A.D. dates")
+	calCmd.MarkFlagsMutuallyExclusive("year", "extended")
 	rootCmd.AddCommand(calCmd)
 }
