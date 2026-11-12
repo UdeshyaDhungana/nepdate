@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	extCellWidth = 9 // inner width of a cell
+	extCellWidth = 8 // inner width of a cell
 	extCellRows  = 1 // inner height of a cell
 )
 
@@ -32,7 +32,7 @@ func center(s string, width int) string {
 func renderExtCell(day int, ad time.Time, highlight bool) []string {
 	english := subscriptDigits.Replace(fmt.Sprintf("%d", ad.Day()))
 	if ad.Day() == 1 {
-		english = ad.Format("Jan") + english
+		english = ad.Format("Jan")[:2] + english
 	}
 
 	lines := make([]string, extCellRows)
