@@ -56,6 +56,12 @@ Show this month's calendar:
 nepdate cal
 ```
 
+Show this month as a larger grid, with the A.D. date in subscript next to each B.S. day (cannot be combined with `-y`):
+
+```
+nepdate cal -e
+```
+
 Convert a B.S. date to A.D.:
 
 ```
