@@ -52,7 +52,14 @@ func renderExtCell(day int, ad time.Time, highlight bool) []string {
 // printExtendedMonth prints a large grid calendar for the given month.
 func printExtendedMonth(year int, month internal.BSMonth, today *internal.BSDate) {
 	gridWidth := 7*extCellWidth + 8
-	title := fmt.Sprintf("%v %d", month, year)
+	daysCount := internal.GetConfig().Years[year].DaysInMonths[month]
+	firstAd := internal.MustConvertBsDateToAdTime(internal.BSDate{Year: year, Month: month, Day: 1})
+	lastAd := internal.MustConvertBsDateToAdTime(internal.BSDate{Year: year, Month: month, Day: daysCount})
+	adMonths := firstAd.Format("Jan")
+	if lastAd.Month() != firstAd.Month() {
+		adMonths += "-" + lastAd.Format("Jan")
+	}
+	title := fmt.Sprintf("%v %d (%s)", month, year, adMonths)
 	fmt.Println(center(title, gridWidth))
 
 	border := func(l, m, r string) string {
@@ -69,7 +76,6 @@ func printExtendedMonth(year int, month internal.BSMonth, today *internal.BSDate
 	fmt.Println(border("├", "┼", "┤"))
 
 	sakratiWeekday := int(internal.BSDate{Year: year, Month: month, Day: 1}.Weekday())
-	daysCount := internal.GetConfig().Years[year].DaysInMonths[month]
 	weeksCount := 1 + (sakratiWeekday+daysCount-1)/7
 	blank := strings.Repeat(" ", extCellWidth)
 
